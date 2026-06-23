@@ -1,6 +1,6 @@
 
 import { test, expect } from '../src/fixtures/pagefixtures';
-// import { CsvHelper } from '../src/utils/CsvHelper';
+import { CsvHelper } from '../src/utils/CsvHelper';
 import { ExcelHelper } from '../src/utils/ExcelHelper';
 import { JsonHelper } from '../src/utils/JsonHelper';
 
@@ -35,13 +35,13 @@ test('login to app using wrong credentials with Data driven test', async ({ logi
 
 
 //DD_2: without fixtures, parallel mode. read csv data directly and loop the test method row wise...
-// let testData = CsvHelper.readCsv('src/data/loginData.csv');
-// for (let row of testData) {
-//     test.skip(`invalid login test with - ${row.username} - ${row.password}`, async ({ loginPage }) => {
-//         await loginPage.doLogin(row.username, row.password);
-//         expect(await loginPage.isInvalidLoginErrorDisplayed()).toBeTruthy();
-//     });
-// };
+let testData = CsvHelper.readCsv('src/data/loginData.csv');
+for (let row of testData) {
+    test.skip(`invalid login test with - ${row.username} - ${row.password}`, async ({ loginPage }) => {
+        await loginPage.doLogin(row.username, row.password);
+        expect(await loginPage.isInvalidLoginErrorDisplayed()).toBeTruthy();
+    });
+};
 
 
 //MS excel - office latest
