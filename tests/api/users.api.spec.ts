@@ -1,10 +1,9 @@
-
 import { test, expect } from '@playwright/test';
 
 let AUTH_TOKEN = { Authorization: 'Bearer 1d845aa4bebcdb0fea690adf59de3b6fb715af4f80c5eb86c3556abc69909d81' };
 
 
-test('get user test', async ({ request }) => {
+test.skip('get user test', async ({ request }) => {
 
     let response = await request.get('https://gorest.co.in/public/v2/users', {
         headers: AUTH_TOKEN
@@ -21,7 +20,7 @@ test('get user test', async ({ request }) => {
 
 });
 
-test('create a user test', async ({ request }) => {
+test.skip('create a user test', async ({ request }) => {
 
     //JS Object
     let userData = {

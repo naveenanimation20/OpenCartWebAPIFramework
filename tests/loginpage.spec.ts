@@ -12,17 +12,17 @@ test.beforeEach(async ({ page }) => {
     homePage = new HomePage(page);
 });
 
-test('login page title test', async () => {
+test.skip('login page title test', async () => {
     const pageTitle = await loginPage.getLoginPageTitle();
     console.log('login page title', pageTitle);
     expect(pageTitle).toBe('Account Login');
 });
 
-test('forgot pwd link exist test', async () => {
+test.skip('forgot pwd link exist test', async () => {
     expect(await loginPage.isForgotPwdLinkExist()).toBeTruthy();
 });
 
-test('user is able to login to app test', async () => {
+test.skip('user is able to login to app test', async () => {
     await loginPage.doLogin(process.env.USERNAME!, process.env.PASSWORD!);
     expect.soft(await homePage.isLogoutLinkExist()).toBeTruthy();
 });

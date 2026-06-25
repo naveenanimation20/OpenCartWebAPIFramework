@@ -1,0 +1,419 @@
+# ═══════════════════════════════════════════════════════════════
+# FILE: .github/workflows/master-pipeline.yml
+# REPO: naveenanimation20/OpenCartWebAPIFramework
+# DEV REPO: jglick/simple-maven-project-with-tests
+# ═══════════════════════════════════════════════════════════════
+
+name: Master CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Run up to environment'
+        required: true
+        default: 'QA'
+        type: choice
+        options:
+          - dev
+          - QA
+          - stage
+          - Prod
+
+jobs:
+
+  # ═════════════════════════════════════════════════════
+  # STEP 1: BUILD APP + UNIT TESTS (DEV REPO - MAVEN)
+  # ═════════════════════════════════════════════════════
+  build:
+    name: Build & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DEV repo
+        uses: actions/checkout@v4
+        with:
+          repository: jglick/simple-maven-project-with-tests
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build & Run Unit Tests
+        run: |
+          echo "========================================="
+          echo "  Building App + Running Unit Tests"
+          echo "========================================="
+          mvn clean install
+
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: target/surefire-reports/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
+  # STEP 2: DEPLOY DEV + SANITY TESTS
+  # ═════════════════════════════════════════════════════
+  deploy-dev:
+    name: Deploy to DEV
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to DEV
+        run: echo "Deployed to DEV ✅"
+
+  sanity-dev:
+    name: DEV - Sanity Tests
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout QA repo
+        uses: actions/checkout@v4
+        with:
+          repository: naveenanimation20/OpenCartWebAPIFramework
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-dev
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-dev.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps only
+        if: steps.pw-cache-dev.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run Sanity Tests on DEV
+        run: |
+          echo "========================================="
+          echo "  Running SANITY @smoke on DEV"
+          echo "========================================="
+          npx playwright test --project=chromium --grep @smoke
+        env:
+          ENV: dev
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload DEV HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-sanity-html-report
+          path: reports/html-report/
+          retention-days: 30
+
+      - name: Upload DEV Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-sanity-allure-report
+          path: allure-report/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
+  # STEP 3: DEPLOY QA + REGRESSION TESTS
+  # ═════════════════════════════════════════════════════
+  deploy-qa:
+    name: Deploy to QA
+    needs: sanity-dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to QA
+        run: echo "Deployed to QA ✅"
+
+  regression-qa:
+    name: QA - Regression Tests
+    needs: deploy-qa
+    runs-on: ubuntu-latest
+    environment: QA
+    steps:
+      - name: Checkout QA repo
+        uses: actions/checkout@v4
+        with:
+          repository: naveenanimation20/OpenCartWebAPIFramework
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-qa
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-qa.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps only
+        if: steps.pw-cache-qa.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run Regression Tests on QA
+        run: |
+          echo "========================================="
+          echo "  Running REGRESSION (all tests) on QA"
+          echo "========================================="
+          npx playwright test --project=chromium
+        env:
+          ENV: qa
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload QA HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-regression-html-report
+          path: reports/html-report/
+          retention-days: 30
+
+      - name: Upload QA Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-regression-allure-report
+          path: allure-report/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
+  # STEP 4: DEPLOY STAGE + SANITY TESTS
+  # ═════════════════════════════════════════════════════
+  deploy-stage:
+    name: Deploy to STAGE
+    needs: regression-qa
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to STAGE
+        run: echo "Deployed to STAGE ✅"
+
+  sanity-stage:
+    name: STAGE - Sanity Tests
+    needs: deploy-stage
+    runs-on: ubuntu-latest
+    environment: stage
+    steps:
+      - name: Checkout QA repo
+        uses: actions/checkout@v4
+        with:
+          repository: naveenanimation20/OpenCartWebAPIFramework
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-stage
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-stage.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps only
+        if: steps.pw-cache-stage.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run Sanity Tests on STAGE
+        run: |
+          echo "========================================="
+          echo "  Running SANITY @smoke on STAGE"
+          echo "========================================="
+          npx playwright test --project=chromium --grep @smoke
+        env:
+          ENV: stage
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload STAGE HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-sanity-html-report
+          path: reports/html-report/
+          retention-days: 30
+
+      - name: Upload STAGE Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-sanity-allure-report
+          path: allure-report/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
+  # STEP 5: DEPLOY PROD + SMOKE TESTS
+  # ═════════════════════════════════════════════════════
+  deploy-prod:
+    name: Deploy to PROD
+    needs: sanity-stage
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Deploy to PROD
+        run: echo "Deployed to PROD ✅"
+
+  smoke-prod:
+    name: PROD - Smoke Tests
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout QA repo
+        uses: actions/checkout@v4
+        with:
+          repository: naveenanimation20/OpenCartWebAPIFramework
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-prod
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-prod.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps only
+        if: steps.pw-cache-prod.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run Smoke Tests on PROD
+        run: |
+          echo "========================================="
+          echo "  Running SMOKE @smoke on PROD"
+          echo "========================================="
+          npx playwright test --project=chromium --grep @smoke
+        env:
+          ENV: prod
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload PROD HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-html-report
+          path: reports/html-report/
+          retention-days: 30
+
+      - name: Upload PROD Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-allure-report
+          path: allure-report/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
+  # PIPELINE SUMMARY
+  # ═════════════════════════════════════════════════════
+  summary:
+    name: Pipeline Summary
+    needs: [build, sanity-dev, regression-qa, sanity-stage, smoke-prod]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Results
+        run: |
+          echo "═══════════════════════════════════════════"
+          echo "       MASTER CI/CD PIPELINE SUMMARY"
+          echo "═══════════════════════════════════════════"
+          echo "  Build + Unit:    ${{ needs.build.result }}"
+          echo "  DEV Sanity:      ${{ needs.sanity-dev.result }}"
+          echo "  QA Regression:   ${{ needs.regression-qa.result }}"
+          echo "  STAGE Sanity:    ${{ needs.sanity-stage.result }}"
+          echo "  PROD Smoke:      ${{ needs.smoke-prod.result }}"
+          echo "═══════════════════════════════════════════"

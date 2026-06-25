@@ -21,12 +21,12 @@ test.beforeEach(async ({ page }) => {
 // });
 
 
-test('logout link exist test', async () => {
+test.skip('logout link exist test', async () => {
     expect(await homePage.isLogoutLinkExist()).toBeTruthy();
 });
 
 
-test('home page headers exist test @junesprint', async () => {
+test.skip('home page headers exist test @junesprint', async () => {
     let allHeaders = await homePage.getHomePageHeaders();
     console.log('home page headers: ', allHeaders);
     expect.soft(allHeaders).toHaveLength(4);

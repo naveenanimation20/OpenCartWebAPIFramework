@@ -10,14 +10,14 @@ let userId: number;
 test.describe.serial('running e2e go rest crud api tests', () => {
 
     //GET test:
-    test('GET API -- get all users', async ({ apiHelper }) => {
+    test('@regression GET API -- get all users', async ({ apiHelper }) => {
         let response = await apiHelper.get('/public/v2/users', AUTH_HEADER);
         expect(response.status).toBe(200);
         expect(response.body.length).toBeGreaterThan(0);
     });
 
 
-    test('POST API -- create a user', async ({ apiHelper }) => {
+    test('@regression POST API -- create a user', async ({ apiHelper }) => {
         let userData = {
             name: 'Naveen API',
             email: `automation_${Date.now()}@open.com`,
@@ -33,7 +33,7 @@ test.describe.serial('running e2e go rest crud api tests', () => {
     });
 
 
-    test('PUT API -- Update a user', async ({ apiHelper }) => {
+    test('@regression PUT API -- Update a user', async ({ apiHelper }) => {
         let userUpdatedData = {
             name: 'Naveen API Updated',
             status: 'inactive'
@@ -45,7 +45,7 @@ test.describe.serial('running e2e go rest crud api tests', () => {
         expect(response.body.status).toBe(userUpdatedData.status);
     });
 
-    test('DELETE API -- Delete a user', async ({ apiHelper }) => {
+    test('@regression DELETE API -- Delete a user', async ({ apiHelper }) => {
         let response = await apiHelper.delete(`/public/v2/users/${userId}`, AUTH_HEADER);
         expect(response.status).toBe(204);
     });
