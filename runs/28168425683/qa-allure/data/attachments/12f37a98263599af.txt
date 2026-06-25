@@ -1,0 +1,70 @@
+{
+  type: 'amadeusOAuth2Token',
+  username: 'naveenanimation20@gmail.com',
+  application_name: 'July2025APP',
+  client_id: 'pUYP1Wr0MJmKmt3uSwI7fwcmYjcN7tub',
+  token_type: 'Bearer',
+  access_token: 'eFXA0xoN2jv7BrLu2pP2i9ieqP2L',
+  expires_in: 1799,
+  state: 'approved',
+  scope: ''
+}
+{
+  meta: {
+    count: 2,
+    links: {
+      self: 'https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY,AIRPORT&keyword=MUC&countryCode=DE'
+    }
+  },
+  data: [
+    {
+      type: 'location',
+      subType: 'CITY',
+      name: 'MUNICH',
+      detailedName: 'MUNICH/DE',
+      id: 'CMUC',
+      self: [Object],
+      timeZoneOffset: '+02:00',
+      iataCode: 'MUC',
+      geoCode: [Object],
+      address: [Object],
+      analytics: [Object]
+    },
+    {
+      type: 'location',
+      subType: 'AIRPORT',
+      name: 'MUNICH INTERNATIONAL',
+      detailedName: 'MUNICH/DE:MUNICH INTERNATIONAL',
+      id: 'AMUC',
+      self: [Object],
+      timeZoneOffset: '+02:00',
+      iataCode: 'MUC',
+      geoCode: [Object],
+      address: [Object],
+      analytics: [Object]
+    }
+  ]
+}
+2
+{
+  type: 'location',
+  subType: 'CITY',
+  name: 'MUNICH',
+  detailedName: 'MUNICH/DE',
+  id: 'CMUC',
+  self: {
+    href: 'https://test.api.amadeus.com/v1/reference-data/locations/CMUC',
+    methods: [ 'GET' ]
+  },
+  timeZoneOffset: '+02:00',
+  iataCode: 'MUC',
+  geoCode: { latitude: 48.35389, longitude: 11.78612 },
+  address: {
+    cityName: 'MUNICH',
+    cityCode: 'MUC',
+    countryName: 'GERMANY',
+    countryCode: 'DE',
+    regionCode: 'EUROP'
+  },
+  analytics: { travelers: { score: 27 } }
+}
