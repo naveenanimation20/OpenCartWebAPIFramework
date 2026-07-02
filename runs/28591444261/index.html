@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pipeline Reports — Run 28591444261</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #1a1a2e; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .card h2 { margin-top: 0; color: #333; }
+    .links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; }
+    .html-btn { background: #1a1a2e; }
+    .allure-btn { background: #28a745; }
+    .meta { color: #666; font-size: 14px; margin-bottom: 24px; }
+    .docker-badge { display: inline-block; background: #2496ED; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎭 Pipeline Reports <span class="docker-badge">🐳 Docker</span></h1>
+    <p class="meta">Run ID: 28591444261 | Branch: main | Date: 02 Jul 2026, 01:02 PM UTC</p>
+
+    <div class="card">
+      <h2>🟢 DEV — Sanity</h2>
+      <div class="links">
+        <a class="btn html-btn" href="dev-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="dev-allure/index.html">📈 Allure Report</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔵 QA — Regression</h2>
+      <div class="links">
+        <a class="btn html-btn" href="qa-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="qa-allure/index.html">📈 Allure Report</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🟡 STAGE — Sanity</h2>
+      <div class="links">
+        <a class="btn html-btn" href="stage-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="stage-allure/index.html">📈 Allure Report</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔴 PROD — Smoke</h2>
+      <div class="links">
+        <a class="btn html-btn" href="prod-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="prod-allure/index.html">📈 Allure Report</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
