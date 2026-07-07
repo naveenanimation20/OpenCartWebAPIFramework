@@ -53,6 +53,7 @@ jobs:
           OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
           GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
 
+      # Per-shard HTML report
       - name: Upload shard HTML report
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,6 +62,16 @@ jobs:
           path: reports/html-report/
           retention-days: 7
 
+      # Per-shard Allure results (raw JSON — for merging later)
+      - name: Upload shard Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-shard-${{ matrix.shard }}
+          path: allure-results/
+          retention-days: 7
+
+      # Blob report (for PW HTML merge)
       - name: Upload blob report
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,7 +81,7 @@ jobs:
           retention-days: 1
 
   merge-reports:
-    name: Merge Reports
+    name: Merge All Reports
     needs: test
     if: always()
     runs-on: ubuntu-latest
@@ -89,6 +100,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # ─── MERGE PW HTML REPORT ──────────────────────────
       - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
@@ -96,12 +108,41 @@ jobs:
           pattern: blob-report-*
           merge-multiple: true
 
-      - name: Merge into single report
+      - name: Merge PW HTML report
         run: npx playwright merge-reports --reporter=html ./all-blob-reports
 
-      - name: Upload merged report
+      - name: Upload merged PW HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: merged-full-html-report
+          name: merged-pw-html-report
           path: playwright-report/
+          retention-days: 30
+
+      # ─── MERGE ALLURE REPORT ───────────────────────────
+      - name: Install Allure
+        run: npm install -g allure-commandline
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-allure-results
+          pattern: allure-results-shard-*
+
+      - name: Combine Allure results into single folder
+        run: |
+          mkdir -p combined-allure-results
+          for dir in all-allure-results/allure-results-shard-*/; do
+            cp -r "$dir"* combined-allure-results/ 2>/dev/null || true
+          done
+          echo "Total allure result files:"
+          ls combined-allure-results/ | wc -l
+
+      - name: Generate merged Allure report
+        run: allure generate combined-allure-results --clean -o merged-allure-report
+
+      - name: Upload merged Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-allure-report
+          path: merged-allure-report/
           retention-days: 30
