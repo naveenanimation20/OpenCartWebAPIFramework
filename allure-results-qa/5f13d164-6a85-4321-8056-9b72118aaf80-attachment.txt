@@ -1,2 +1,0 @@
-user creds: pwbatchtest@open.com - pw123
-search key: imac

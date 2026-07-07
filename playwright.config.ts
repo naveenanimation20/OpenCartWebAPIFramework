@@ -18,14 +18,17 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 2 : undefined,
 
-  reporter: [
-    ["list"],
-    ["html", { outputFolder: "reports/html-report", open: "never" }],
-    ["allure-playwright", {
-      outputFolder: "allure-results",
-      suiteTitle: true,
-    }],
-  ],
+  reporter: process.env.CI
+    ? [
+      ["blob"],
+      ["html", { outputFolder: "reports/html-report", open: "never" }],
+      ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
+    ]
+    : [
+      ["list"],
+      ["html", { outputFolder: "reports/html-report", open: "never" }],
+      ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
+    ],
 
   use: {
     baseURL: process.env.BASE_URL,
