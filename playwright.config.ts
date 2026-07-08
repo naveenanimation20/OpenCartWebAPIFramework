@@ -25,6 +25,7 @@ export default defineConfig({
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
     ]
     : [
+      ["blob", { outputDir: "blob-report" }],
       ["list"],
       ["html", { outputFolder: "reports/html-report", open: "never" }],
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],

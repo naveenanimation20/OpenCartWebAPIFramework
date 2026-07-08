@@ -18,6 +18,9 @@ allure-results/
 allure-report/
 playwright-report/
 test-results/
+blob-report/
+blob-shard-*/
+all-blob-reports/
 
 # build
 dist/

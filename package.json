@@ -1,26 +1,57 @@
 {
-  "name": "opencart_webframework_pw",
+  "name": "OpenCartWebAPIFramework",
   "version": "1.0.0",
-  "description": "This is the open cart web app framework using POM",
-  "main": "index.js",
+  "description": "Playwright TypeScript Framework with POM, Fixtures, API Testing, Data-Driven, Schema Validation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist/",
+    "src/pages/",
+    "src/fixtures/",
+    "src/api/",
+    "src/utils/",
+    "src/types/",
+    "README.md"
+  ],
   "scripts": {
+    "build": "tsc",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:chrome": "npx playwright test --project=chromium",
     "allure:generate": "npx allure generate allure-results --clean -o allure-report",
     "allure:open": "npx allure open allure-report",
     "allure:report": "npm run allure:generate && npm run allure:open",
-    "allure:clean": "rm -rf allure-results allure-report"
+    "allure:clean": "rm -rf allure-results allure-report",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "Naveen Automation Labs",
-  "license": "ISC",
-  "type": "module",
+  "keywords": [
+    "playwright",
+    "typescript",
+    "pom",
+    "automation",
+    "testing",
+    "sdet",
+    "api-testing",
+    "data-driven",
+    "framework"
+  ],
+  "author": "Naveen Khunteta <naveen@naveenautomationlabs.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/naveenanimation20/OpenCartWebAPIFramework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naveenanimation20/OpenCartWebAPIFramework.git"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.52.0"
+  },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1",
     "allure-commandline": "^2.42.0",
-    "allure-playwright": "^3.9.0"
+    "allure-playwright": "^3.9.0",
+    "typescript": "^5.4.0"
   },
   "dependencies": {
     "ajv": "^8.20.0",

@@ -1,0 +1,34 @@
+# Tests — users don't need your tests
+tests/
+test-results/
+
+# Reports
+reports/
+allure-results/
+allure-report/
+playwright-report/
+blob-report/
+
+# CI/CD
+.github/
+Jenkinsfile
+Jenkinsfile_docker
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Config/Secrets
+config/.env.*
+!config/.env.example
+
+# Build artifacts
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
