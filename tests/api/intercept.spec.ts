@@ -1,5 +1,7 @@
 
 import { test, expect } from '@playwright/test';
+import * as allure from "allure-js-commons";
+
 
 
 //web app --> intercept the network calls and log them...
@@ -8,7 +10,6 @@ import { test, expect } from '@playwright/test';
 
 //intercept the network calls...
 test('@smoke intercept and log requests', async ({ page }) => {
-
     await page.route('**/*', async (route) => {
         console.log(route.request().method(), route.request().url());
         await route.continue(); //url1 -- capture and continue./..url2 -- capture -- contiue
@@ -22,7 +23,7 @@ test('@smoke intercept and log requests', async ({ page }) => {
 //intercept with mocking:
 //mocking: fake data/response
 
-test('@@regression mock search data api', async ({ page }) => {
+test('@regression mock search data api', async ({ page, request }) => {
     let fakeProducts = [
         { name: 'Fake MacBook Pro', price: "$599" },
         { name: 'Fake iphone 20', price: "$999" }
@@ -44,13 +45,15 @@ test('@@regression mock search data api', async ({ page }) => {
     });
 
     console.log('fake json response:', fakeJson);
+
+    await page.pause();
 });
 
 
 
 
 
-test.skip('mock search page with fake HTML', async ({ page }) => {
+test('mock search page with fake HTML', async ({ page }) => {
 
     await page.route('**/index.php?route=product/search&search=macbook', (route) => {
         route.fulfill({
@@ -85,6 +88,8 @@ test.skip('mock search page with fake HTML', async ({ page }) => {
 
     const prices = await page.locator('.price').allTextContents();
     expect(prices).toEqual(["$599", "$999"]);
+
+    await page.pause();
 });
 
 

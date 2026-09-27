@@ -1,7 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import reportingLabs from './reporting-labs.config';
 
 import dotenv from 'dotenv';
 
+//npm install dotenv
 //ENV=dev npx playwright test
 const ENV = process.env.ENV || "qa";
 console.log('Running tests on Environment: ', ENV);
@@ -23,18 +25,20 @@ export default defineConfig({
       ["blob"],
       ["html", { outputFolder: "reports/html-report", open: "never" }],
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
+      ['reporting-labs', reportingLabs]
     ]
     : [
       ["blob", { outputDir: "blob-report" }],
       ["list"],
       ["html", { outputFolder: "reports/html-report", open: "never" }],
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
+      ['reporting-labs', reportingLabs]
     ],
 
   use: {
     baseURL: process.env.BASE_URL,
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    screenshot: 'on',
+    video: 'on',
     trace: 'on-first-retry',
     headless: !process.env.CI ? false : true,
   },

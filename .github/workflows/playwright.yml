@@ -53,6 +53,15 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      # reportingLabs run history: powers the Trend chart, new vs known
+      # failures, flaky dots and "got slower". One history per environment.
+      - name: Restore reportingLabs history
+        uses: actions/cache@v4
+        with:
+          path: reporting-labs.history.json
+          key: reporting-labs-history-${{ github.event.inputs.environment || 'QA' }}-${{ github.run_id }}
+          restore-keys: reporting-labs-history-${{ github.event.inputs.environment || 'QA' }}-
+
       - name: Run tests
         run: npx playwright test --project=chromium
         env:
@@ -80,4 +89,12 @@ jobs:
         with:
           name: allure-results-${{ github.run_id }}
           path: allure-results/
+          retention-days: 30
+
+      - name: Upload reportingLabs Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporting-labs-report-${{ github.run_id }}
+          path: reporting-labs/
           retention-days: 30

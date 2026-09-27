@@ -47,6 +47,3 @@ export class LoginPage extends BasePage {
 
 
 }
-
-
-
