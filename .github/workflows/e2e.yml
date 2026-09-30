@@ -3,6 +3,13 @@
 # REPO: naveenanimation20/OpenCartWebAPIFramework
 # DEV REPO: jglick/simple-maven-project-with-tests
 # ═══════════════════════════════════════════════════════════════
+# "Run up to environment" — the dropdown controls how far the
+# pipeline goes:
+#   dev   → Build → DEV only
+#   QA    → Build → DEV → QA
+#   stage → Build → DEV → QA → STAGE
+#   Prod  → Build → DEV → QA → STAGE → PROD
+# ═══════════════════════════════════════════════════════════════
 
 name: e2e CI/CD Pipeline
 
@@ -24,6 +31,7 @@ jobs:
 
   # ═════════════════════════════════════════════════════
   # STEP 1: BUILD APP + UNIT TESTS (DEV REPO - MAVEN)
+  #   ➜ Always runs
   # ═════════════════════════════════════════════════════
   build:
     name: Build & Unit Tests
@@ -58,6 +66,7 @@ jobs:
 
   # ═════════════════════════════════════════════════════
   # STEP 2: DEPLOY DEV + SANITY TESTS
+  #   ➜ Always runs (every option includes DEV)
   # ═════════════════════════════════════════════════════
   deploy-dev:
     name: Deploy to DEV
@@ -102,6 +111,13 @@ jobs:
         if: steps.pw-cache-dev.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      - name: Restore reportingLabs history
+        uses: actions/cache@v4
+        with:
+          path: reporting-labs.history.json
+          key: reporting-labs-history-dev-${{ github.run_id }}
+          restore-keys: reporting-labs-history-dev-
+
       - name: Run Sanity Tests on DEV
         run: |
           echo "========================================="
@@ -141,12 +157,22 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Upload DEV reportingLabs Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-sanity-reportinglabs-report
+          path: reporting-labs/
+          retention-days: 30
+
   # ═════════════════════════════════════════════════════
   # STEP 3: DEPLOY QA + REGRESSION TESTS
+  #   ➜ Runs when: QA, stage, or Prod
   # ═════════════════════════════════════════════════════
   deploy-qa:
     name: Deploy to QA
     needs: sanity-dev
+    if: contains(fromJSON('["QA","stage","Prod"]'), github.event.inputs.environment)
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to QA
@@ -155,6 +181,7 @@ jobs:
   regression-qa:
     name: QA - Regression Tests
     needs: deploy-qa
+    if: contains(fromJSON('["QA","stage","Prod"]'), github.event.inputs.environment)
     runs-on: ubuntu-latest
     environment: QA
     steps:
@@ -186,6 +213,13 @@ jobs:
       - name: Install Playwright OS deps only
         if: steps.pw-cache-qa.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
+
+      - name: Restore reportingLabs history
+        uses: actions/cache@v4
+        with:
+          path: reporting-labs.history.json
+          key: reporting-labs-history-qa-${{ github.run_id }}
+          restore-keys: reporting-labs-history-qa-
 
       - name: Run Regression Tests on QA
         run: |
@@ -226,12 +260,22 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Upload QA reportingLabs Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-regression-reportinglabs-report
+          path: reporting-labs/
+          retention-days: 30
+
   # ═════════════════════════════════════════════════════
   # STEP 4: DEPLOY STAGE + SANITY TESTS
+  #   ➜ Runs when: stage or Prod
   # ═════════════════════════════════════════════════════
   deploy-stage:
     name: Deploy to STAGE
     needs: regression-qa
+    if: contains(fromJSON('["stage","Prod"]'), github.event.inputs.environment)
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to STAGE
@@ -240,6 +284,7 @@ jobs:
   sanity-stage:
     name: STAGE - Sanity Tests
     needs: deploy-stage
+    if: contains(fromJSON('["stage","Prod"]'), github.event.inputs.environment)
     runs-on: ubuntu-latest
     environment: stage
     steps:
@@ -271,6 +316,13 @@ jobs:
       - name: Install Playwright OS deps only
         if: steps.pw-cache-stage.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
+
+      - name: Restore reportingLabs history
+        uses: actions/cache@v4
+        with:
+          path: reporting-labs.history.json
+          key: reporting-labs-history-stage-${{ github.run_id }}
+          restore-keys: reporting-labs-history-stage-
 
       - name: Run Sanity Tests on STAGE
         run: |
@@ -311,12 +363,22 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Upload STAGE reportingLabs Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-sanity-reportinglabs-report
+          path: reporting-labs/
+          retention-days: 30
+
   # ═════════════════════════════════════════════════════
   # STEP 5: DEPLOY PROD + SMOKE TESTS
+  #   ➜ Runs when: Prod only
   # ═════════════════════════════════════════════════════
   deploy-prod:
     name: Deploy to PROD
     needs: sanity-stage
+    if: github.event.inputs.environment == 'Prod'
     runs-on: ubuntu-latest
     environment: Prod
     steps:
@@ -326,6 +388,7 @@ jobs:
   smoke-prod:
     name: PROD - Smoke Tests
     needs: deploy-prod
+    if: github.event.inputs.environment == 'Prod'
     runs-on: ubuntu-latest
     environment: Prod
     steps:
@@ -357,6 +420,13 @@ jobs:
       - name: Install Playwright OS deps only
         if: steps.pw-cache-prod.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
+
+      - name: Restore reportingLabs history
+        uses: actions/cache@v4
+        with:
+          path: reporting-labs.history.json
+          key: reporting-labs-history-prod-${{ github.run_id }}
+          restore-keys: reporting-labs-history-prod-
 
       - name: Run Smoke Tests on PROD
         run: |
@@ -395,9 +465,19 @@ jobs:
         with:
           name: prod-smoke-allure-report
           path: allure-report/
+          retention-days: 30
 
-    # ═════════════════════════════════════════════════════
+      - name: Upload PROD reportingLabs Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-reportinglabs-report
+          path: reporting-labs/
+          retention-days: 30
+
+  # ═════════════════════════════════════════════════════
   # PIPELINE NOTIFICATION — GITHUB PAGES + EMAIL + SLACK
+  #   ➜ Always runs (handles skipped jobs gracefully)
   # ═════════════════════════════════════════════════════
   notify:
     name: Publish Reports + Notify
@@ -426,10 +506,18 @@ jobs:
           echo "stage=$(get_emoji $STAGE)" >> $GITHUB_OUTPUT
           echo "prod=$(get_emoji $PROD)" >> $GITHUB_OUTPUT
 
-          if [ "$BUILD" = "success" ] && [ "$DEV" = "success" ] && [ "$QA" = "success" ] && [ "$STAGE" = "success" ] && [ "$PROD" = "success" ]; then
-            echo "overall=✅ ALL PASSED" >> $GITHUB_OUTPUT
-          else
+          # Check only the stages that actually ran (not skipped)
+          FAILED=false
+          for result in "$BUILD" "$DEV" "$QA" "$STAGE" "$PROD"; do
+            if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+              FAILED=true
+            fi
+          done
+
+          if [ "$FAILED" = "true" ]; then
             echo "overall=❌ SOME FAILURES" >> $GITHUB_OUTPUT
+          else
+            echo "overall=✅ ALL PASSED" >> $GITHUB_OUTPUT
           fi
 
           REPORT_BASE="https://naveenanimation20.github.io/OpenCartWebAPIFramework/runs/${{ github.run_id }}"
@@ -454,18 +542,23 @@ jobs:
               body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f5f5f5; }
               .container { max-width: 800px; margin: 0 auto; }
               h1 { color: #1a1a2e; }
+              .env-tag { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; margin-left: 8px; }
+              .tag-selected { background: #007bff; }
               .card { background: white; border-radius: 12px; padding: 24px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
               .card h2 { margin-top: 0; color: #333; }
+              .card.skipped { opacity: 0.5; }
+              .card.skipped h2::after { content: " — SKIPPED"; color: #999; font-size: 14px; }
               .links { display: flex; gap: 12px; flex-wrap: wrap; }
               .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; }
               .html-btn { background: #1a1a2e; }
               .allure-btn { background: #28a745; }
+              .rlabs-btn { background: #6f42c1; }
               .meta { color: #666; font-size: 14px; margin-bottom: 24px; }
             </style>
           </head>
           <body>
             <div class="container">
-              <h1>🎭 Pipeline Reports</h1>
+              <h1>🎭 Pipeline Reports <span class="env-tag tag-selected">ENV_SELECTED</span></h1>
               <p class="meta">Run ID: RUN_ID | Branch: BRANCH | Date: RUN_DATE</p>
 
               <div class="card">
@@ -473,30 +566,34 @@ jobs:
                 <div class="links">
                   <a class="btn html-btn" href="dev-html/index.html">📊 HTML Report</a>
                   <a class="btn allure-btn" href="dev-allure/index.html">📈 Allure Report</a>
+                  <a class="btn rlabs-btn" href="dev-rlabs/index.html">🧪 ReportingLabs</a>
                 </div>
               </div>
 
-              <div class="card">
+              <div class="card" id="qa-card">
                 <h2>🔵 QA — Regression</h2>
                 <div class="links">
                   <a class="btn html-btn" href="qa-html/index.html">📊 HTML Report</a>
                   <a class="btn allure-btn" href="qa-allure/index.html">📈 Allure Report</a>
+                  <a class="btn rlabs-btn" href="qa-rlabs/index.html">🧪 ReportingLabs</a>
                 </div>
               </div>
 
-              <div class="card">
+              <div class="card" id="stage-card">
                 <h2>🟡 STAGE — Sanity</h2>
                 <div class="links">
                   <a class="btn html-btn" href="stage-html/index.html">📊 HTML Report</a>
                   <a class="btn allure-btn" href="stage-allure/index.html">📈 Allure Report</a>
+                  <a class="btn rlabs-btn" href="stage-rlabs/index.html">🧪 ReportingLabs</a>
                 </div>
               </div>
 
-              <div class="card">
+              <div class="card" id="prod-card">
                 <h2>🔴 PROD — Smoke</h2>
                 <div class="links">
                   <a class="btn html-btn" href="prod-html/index.html">📊 HTML Report</a>
                   <a class="btn allure-btn" href="prod-allure/index.html">📈 Allure Report</a>
+                  <a class="btn rlabs-btn" href="prod-rlabs/index.html">🧪 ReportingLabs</a>
                 </div>
               </div>
             </div>
@@ -507,16 +604,21 @@ jobs:
           sed -i "s|RUN_ID|${{ github.run_id }}|g" pages-deploy/runs/${{ github.run_id }}/index.html
           sed -i "s|BRANCH|${{ github.ref_name }}|g" pages-deploy/runs/${{ github.run_id }}/index.html
           sed -i "s|RUN_DATE|$(date +'%d %b %Y, %I:%M %p UTC')|g" pages-deploy/runs/${{ github.run_id }}/index.html
+          sed -i "s|ENV_SELECTED|${{ github.event.inputs.environment }}|g" pages-deploy/runs/${{ github.run_id }}/index.html
 
-          # Copy reports into organized folders
+          # Copy reports into organized folders (|| true handles skipped stages)
           cp -r all-reports/dev-sanity-html-report/ pages-deploy/runs/${{ github.run_id }}/dev-html/ 2>/dev/null || true
           cp -r all-reports/dev-sanity-allure-report/ pages-deploy/runs/${{ github.run_id }}/dev-allure/ 2>/dev/null || true
+          cp -r all-reports/dev-sanity-reportinglabs-report/ pages-deploy/runs/${{ github.run_id }}/dev-rlabs/ 2>/dev/null || true
           cp -r all-reports/qa-regression-html-report/ pages-deploy/runs/${{ github.run_id }}/qa-html/ 2>/dev/null || true
           cp -r all-reports/qa-regression-allure-report/ pages-deploy/runs/${{ github.run_id }}/qa-allure/ 2>/dev/null || true
+          cp -r all-reports/qa-regression-reportinglabs-report/ pages-deploy/runs/${{ github.run_id }}/qa-rlabs/ 2>/dev/null || true
           cp -r all-reports/stage-sanity-html-report/ pages-deploy/runs/${{ github.run_id }}/stage-html/ 2>/dev/null || true
           cp -r all-reports/stage-sanity-allure-report/ pages-deploy/runs/${{ github.run_id }}/stage-allure/ 2>/dev/null || true
+          cp -r all-reports/stage-sanity-reportinglabs-report/ pages-deploy/runs/${{ github.run_id }}/stage-rlabs/ 2>/dev/null || true
           cp -r all-reports/prod-smoke-html-report/ pages-deploy/runs/${{ github.run_id }}/prod-html/ 2>/dev/null || true
           cp -r all-reports/prod-smoke-allure-report/ pages-deploy/runs/${{ github.run_id }}/prod-allure/ 2>/dev/null || true
+          cp -r all-reports/prod-smoke-reportinglabs-report/ pages-deploy/runs/${{ github.run_id }}/prod-rlabs/ 2>/dev/null || true
 
           echo "Reports organized ✅"
           ls -la pages-deploy/runs/${{ github.run_id }}/
@@ -558,13 +660,14 @@ jobs:
               .report-link.green { background: #28a745; }
               .footer { text-align: center; padding: 16px; color: #999; font-size: 12px; border-top: 1px solid #eee; }
               .meta { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; color: #666; }
+              .env-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; background: #007bff; }
             </style>
           </head>
           <body>
             <div class="container">
               <div class="header">
                 <h1>🎭 Playwright CI/CD Dashboard</h1>
-                <p>Master Pipeline Report</p>
+                <p>Master Pipeline Report — Run up to: <span class="env-badge">${{ github.event.inputs.environment }}</span></p>
               </div>
               <div class="body">
                 <div class="meta">
@@ -602,7 +705,7 @@ jobs:
           secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🎭 CI/CD Pipeline — ${{ steps.status.outputs.overall }} — ${{ github.ref_name }}"
+          subject: "🎭 CI/CD Pipeline [${{ github.event.inputs.environment }}] — ${{ steps.status.outputs.overall }} — ${{ github.ref_name }}"
           to: naveenanimation20@gmail.com,training@naveenautomationlabs.com,nkt.agarwal3@gmail.com,kdpatel8184@gmail.com
           from: "CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           html_body: file://dashboard.html
@@ -621,7 +724,7 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "text": { "type": "mrkdwn", "text": "*Overall: ${{ steps.status.outputs.overall }}*\n\n*Branch:* `${{ github.ref_name }}`  |  *Triggered by:* `${{ github.actor }}`" }
+                  "text": { "type": "mrkdwn", "text": "*Overall: ${{ steps.status.outputs.overall }}*\n*Run up to:* `${{ github.event.inputs.environment }}`\n\n*Branch:* `${{ github.ref_name }}`  |  *Triggered by:* `${{ github.actor }}`" }
                 },
                 { "type": "divider" },
                 {
@@ -655,10 +758,15 @@ jobs:
           echo "═══════════════════════════════════════════"
           echo "       MASTER CI/CD PIPELINE SUMMARY"
           echo "═══════════════════════════════════════════"
+          echo "  Selected env:    ${{ github.event.inputs.environment }}"
+          echo "─────────────────────────────────────────"
           echo "  Build + Unit:    ${{ needs.build.result }}"
           echo "  DEV Sanity:      ${{ needs.sanity-dev.result }}"
           echo "  QA Regression:   ${{ needs.regression-qa.result }}"
           echo "  STAGE Sanity:    ${{ needs.sanity-stage.result }}"
           echo "  PROD Smoke:      ${{ needs.smoke-prod.result }}"
           echo "  Reports:         ${{ steps.status.outputs.report_url }}/index.html"
-          echo "═══════════════════════════════════════════"        
+          echo "═══════════════════════════════════════════"
+          echo ""
+          echo "  ℹ️  '⏭️ skipped' = not included in this run"
+          echo "═══════════════════════════════════════════"

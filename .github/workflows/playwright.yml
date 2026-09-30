@@ -1,8 +1,8 @@
 name: Playwright Tests
 
 on:
-  schedule:
-    - cron: '30 21 * * 1-4'  # Mon-Fri 8PM IST
+  # schedule:
+  #   - cron: '30 21 * * 1-4'  # Mon-Fri 8PM IST
   # push:
   #   branches: [main]
   # pull_request:

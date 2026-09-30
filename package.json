@@ -51,7 +51,7 @@
     "@types/node": "^25.9.6",
     "allure-commandline": "^2.42.0",
     "allure-playwright": "^3.9.0",
-    "reporting-labs": "^0.6.0",
+    "reporting-labs": "^0.6.6",
     "typescript": "^5.4.0"
   },
   "dependencies": {
