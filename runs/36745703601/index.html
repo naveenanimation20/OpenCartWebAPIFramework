@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pipeline Reports — Run 36745703601</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #1a1a2e; }
+    .env-tag { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; margin-left: 8px; }
+    .tag-selected { background: #007bff; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .card h2 { margin-top: 0; color: #333; }
+    .card.skipped { opacity: 0.5; }
+    .card.skipped h2::after { content: " — SKIPPED"; color: #999; font-size: 14px; }
+    .links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; }
+    .html-btn { background: #1a1a2e; }
+    .allure-btn { background: #28a745; }
+    .rlabs-btn { background: #6f42c1; }
+    .meta { color: #666; font-size: 14px; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎭 Pipeline Reports <span class="env-tag tag-selected">QA</span></h1>
+    <p class="meta">Run ID: 36745703601 | Branch: main | Date: 30 Sep 2026, 04:42 PM UTC</p>
+
+    <div class="card">
+      <h2>🟢 DEV — Sanity</h2>
+      <div class="links">
+        <a class="btn html-btn" href="dev-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="dev-allure/index.html">📈 Allure Report</a>
+        <a class="btn rlabs-btn" href="dev-rlabs/index.html">🧪 ReportingLabs</a>
+      </div>
+    </div>
+
+    <div class="card" id="qa-card">
+      <h2>🔵 QA — Regression</h2>
+      <div class="links">
+        <a class="btn html-btn" href="qa-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="qa-allure/index.html">📈 Allure Report</a>
+        <a class="btn rlabs-btn" href="qa-rlabs/index.html">🧪 ReportingLabs</a>
+      </div>
+    </div>
+
+    <div class="card" id="stage-card">
+      <h2>🟡 STAGE — Sanity</h2>
+      <div class="links">
+        <a class="btn html-btn" href="stage-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="stage-allure/index.html">📈 Allure Report</a>
+        <a class="btn rlabs-btn" href="stage-rlabs/index.html">🧪 ReportingLabs</a>
+      </div>
+    </div>
+
+    <div class="card" id="prod-card">
+      <h2>🔴 PROD — Smoke</h2>
+      <div class="links">
+        <a class="btn html-btn" href="prod-html/index.html">📊 HTML Report</a>
+        <a class="btn allure-btn" href="prod-allure/index.html">📈 Allure Report</a>
+        <a class="btn rlabs-btn" href="prod-rlabs/index.html">🧪 ReportingLabs</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
