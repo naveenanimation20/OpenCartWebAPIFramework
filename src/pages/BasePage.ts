@@ -60,7 +60,7 @@ export class BasePage {
         await this.page.waitForLoadState('load');
     }
 
-    async takeScreenshot(name: string) {
+    async takeScreenshot(name: string): Promise<Buffer> {
         return await this.page.screenshot({
             fullPage: true,
             path: `reports/screenshot/${name}.png`
