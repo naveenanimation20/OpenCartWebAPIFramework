@@ -1,69 +1,80 @@
 [
  {
-  "time": 1790101272956,
-  "duration": 11719.238,
+  "time": 1791311194213,
+  "duration": 7979.9529999999995,
   "passed": 14,
   "failed": 0,
   "flaky": 0,
-  "skipped": 4,
-  "total": 18,
+  "skipped": 0,
+  "total": 14,
   "tests": {
    "chromium::tests/api/booking.api.spec.ts::booking CRUD with token": [
     "p",
-    1888
+    1452
    ],
    "chromium::tests/api/intercept.spec.ts::@smoke intercept and log requests": [
     "p",
-    3233
+    2536
    ],
    "chromium::tests/api/intercept.spec.ts::@regression mock search data api": [
     "p",
-    6237
+    6394
    ],
    "chromium::tests/api/intercept.spec.ts::mock search page with fake HTML": [
     "p",
-    5571
+    5465
    ],
    "chromium::tests/api/spotify.oauth2.spec.ts::@regression GET -- get albums data": [
     "p",
-    1542
+    579
    ],
    "chromium::tests/api/users.api.indi.spec.ts::@regression POST - create a user": [
     "p",
-    2397
+    1317
    ],
    "chromium::tests/api/users.api.indi.spec.ts::@regression PUT - update a user": [
     "p",
-    3126
+    1394
    ],
    "chromium::tests/api/users.api.indi.spec.ts::@regression DELETE - delete a user": [
     "p",
-    1901
+    1280
    ],
    "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get a user": [
     "p",
-    4020
+    713
    ],
    "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get all users": [
     "p",
-    958
+    526
    ],
    "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression GET API -- get all users": [
     "p",
-    492
+    378
    ],
    "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression POST API -- create a user": [
     "p",
-    472
+    369
    ],
    "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression PUT API -- Update a user": [
     "p",
-    479
+    364
    ],
    "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression DELETE API -- Delete a user": [
     "p",
-    487
-   ],
+    399
+   ]
+  }
+ },
+ {
+  "time": 1791311270457,
+  "duration": 4916.829,
+  "passed": 5,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 8,
+  "total": 13,
+  "tests": {
    "chromium::tests/api/users.api.spec.ts::get user test": [
     "s",
     0
@@ -79,18 +90,7 @@
    "chromium::tests/api/users.api.spec.ts::Delete a user test": [
     "s",
     0
-   ]
-  }
- },
- {
-  "time": 1790101285774,
-  "duration": 13340.481,
-  "passed": 12,
-  "failed": 2,
-  "flaky": 0,
-  "skipped": 4,
-  "total": 18,
-  "tests": {
+   ],
    "chromium::tests/homepage.spec.ts::logout link exist test": [
     "s",
     0
@@ -101,19 +101,19 @@
    ],
    "chromium::tests/homepagefix.spec.ts::@smoke home page title test": [
     "p",
-    4187
+    2382
    ],
    "chromium::tests/homepagefix.spec.ts::@smoke logout link exist test": [
     "p",
-    4170
+    2419
    ],
    "chromium::tests/homepagefix.spec.ts::@regression home page headers exist test": [
     "p",
-    3438
+    2377
    ],
    "chromium::tests/loginpage.spec.ts::login page title test": [
     "p",
-    3525
+    1836
    ],
    "chromium::tests/loginpage.spec.ts::forgot pwd link exist test": [
     "s",
@@ -125,122 +125,645 @@
    ],
    "chromium::tests/loginpagefix.spec.ts::@smoke login page title test": [
     "p",
-    2148
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression forgot pwd link exist test": [
-    "p",
-    1799
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@smoke user is able to login to app test": [
-    "f",
-    2307
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression login to app using wrong credentials with Data driven test": [
-    "p",
-    4336
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - invalid@open.com - wrong123": [
-    "p",
-    3209
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with -  - pw1234": [
-    "p",
-    2883
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - pwtestbatch@open.com - ": [
-    "p",
-    2671
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - abccc@gmail.com": [
-    "f",
-    3129
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - ": [
-    "p",
-    3033
-   ],
-   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - pwbatchtest@open.com": [
-    "p",
-    3085
+    784
    ]
   }
  },
  {
-  "time": 1790101300750,
-  "duration": 17506.51,
-  "passed": 17,
-  "failed": 0,
+  "time": 1791311306883,
+  "duration": 9187.625,
+  "passed": 11,
+  "failed": 2,
   "flaky": 0,
   "skipped": 0,
-  "total": 17,
+  "total": 13,
   "tests": {
+   "chromium::tests/loginpagefix.spec.ts::@regression forgot pwd link exist test": [
+    "f",
+    2176
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke user is able to login to app test": [
+    "p",
+    2677
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression login to app using wrong credentials with Data driven test": [
+    "p",
+    4034
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - invalid@open.com - wrong123": [
+    "p",
+    2599
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with -  - pw1234": [
+    "p",
+    1890
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - pwtestbatch@open.com - ": [
+    "p",
+    1807
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - abccc@gmail.com": [
+    "p",
+    1923
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - ": [
+    "p",
+    1661
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - pwbatchtest@open.com": [
+    "p",
+    1494
+   ],
    "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - wrong@open.com": [
     "p",
-    3377
+    1423
    ],
    "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - invalid@open.com": [
     "p",
-    3347
+    1302
    ],
    "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - pwbatchtest@open.com": [
     "p",
-    3414
+    1311
    ],
    "chromium::tests/loginpagefix.spec.ts::@smoke comp logo exists on product page": [
-    "p",
-    2700
-   ],
+    "f",
+    915
+   ]
+  }
+ },
+ {
+  "time": 1791311337348,
+  "duration": 11310.53,
+  "passed": 11,
+  "failed": 2,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 13,
+  "tests": {
    "chromium::tests/loginpagefix.spec.ts::@smoke footers exist on product page": [
     "p",
-    2423
+    1757
    ],
    "chromium::tests/productpage.spec.ts::@smoke comp logo exists on product page": [
-    "p",
-    2680
+    "f",
+    9407
    ],
    "chromium::tests/productpage.spec.ts::@smoke footers exist on product page": [
     "p",
-    2526
+    2387
    ],
    "chromium::tests/productpage.spec.ts::@regression verify product images count": [
     "p",
-    4150
+    3331
    ],
    "chromium::tests/productpage.spec.ts::@regression verify product Information/Data": [
     "p",
-    4130
+    2341
    ],
    "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Pro": [
     "p",
-    3027
+    1940
    ],
    "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Air": [
     "p",
-    2576
+    1668
    ],
    "chromium::tests/search.spec.ts::@regression verify search results count - imac - iMac": [
     "p",
-    2744
+    2257
    ],
    "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Pro": [
     "p",
-    4139
+    2519
    ],
    "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Air": [
     "p",
-    3536
+    2531
    ],
    "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - imac - iMac": [
     "p",
-    4089
+    2207
    ],
    "chromium::tests/search.spec.ts::@smoke comp logo exists on product page": [
-    "p",
-    3142
+    "f",
+    1456
    ],
    "chromium::tests/search.spec.ts::@smoke footers exist on product page": [
     "p",
-    3312
+    1478
+   ]
+  }
+ },
+ {
+  "time": 1791336152687,
+  "duration": 10416.341,
+  "passed": 14,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 14,
+  "tests": {
+   "chromium::tests/api/booking.api.spec.ts::booking CRUD with token": [
+    "p",
+    1796
+   ],
+   "chromium::tests/api/intercept.spec.ts::@smoke intercept and log requests": [
+    "p",
+    2690
+   ],
+   "chromium::tests/api/intercept.spec.ts::@regression mock search data api": [
+    "p",
+    6201
+   ],
+   "chromium::tests/api/intercept.spec.ts::mock search page with fake HTML": [
+    "p",
+    6935
+   ],
+   "chromium::tests/api/spotify.oauth2.spec.ts::@regression GET -- get albums data": [
+    "p",
+    545
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression POST - create a user": [
+    "p",
+    1707
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression PUT - update a user": [
+    "p",
+    1342
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression DELETE - delete a user": [
+    "p",
+    1426
+   ],
+   "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get a user": [
+    "p",
+    817
+   ],
+   "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get all users": [
+    "p",
+    405
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression GET API -- get all users": [
+    "p",
+    561
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression POST API -- create a user": [
+    "p",
+    430
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression PUT API -- Update a user": [
+    "p",
+    409
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression DELETE API -- Delete a user": [
+    "p",
+    424
+   ]
+  }
+ },
+ {
+  "time": 1791336166160,
+  "duration": 4681.216,
+  "passed": 5,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 8,
+  "total": 13,
+  "tests": {
+   "chromium::tests/api/users.api.spec.ts::get user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::create a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::Update a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::Delete a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepage.spec.ts::logout link exist test": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepage.spec.ts::home page headers exist test @junesprint": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepagefix.spec.ts::@smoke home page title test": [
+    "p",
+    2502
+   ],
+   "chromium::tests/homepagefix.spec.ts::@smoke logout link exist test": [
+    "p",
+    2581
+   ],
+   "chromium::tests/homepagefix.spec.ts::@regression home page headers exist test": [
+    "p",
+    2549
+   ],
+   "chromium::tests/loginpage.spec.ts::login page title test": [
+    "p",
+    1950
+   ],
+   "chromium::tests/loginpage.spec.ts::forgot pwd link exist test": [
+    "s",
+    0
+   ],
+   "chromium::tests/loginpage.spec.ts::user is able to login to app test": [
+    "s",
+    0
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke login page title test": [
+    "p",
+    1010
+   ]
+  }
+ },
+ {
+  "time": 1791336172336,
+  "duration": 7872.356999999999,
+  "passed": 11,
+  "failed": 2,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 13,
+  "tests": {
+   "chromium::tests/loginpagefix.spec.ts::@regression forgot pwd link exist test": [
+    "f",
+    1708
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke user is able to login to app test": [
+    "p",
+    2174
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression login to app using wrong credentials with Data driven test": [
+    "p",
+    2919
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - invalid@open.com - wrong123": [
+    "p",
+    2098
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with -  - pw1234": [
+    "p",
+    1762
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - pwtestbatch@open.com - ": [
+    "p",
+    1497
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - abccc@gmail.com": [
+    "p",
+    1620
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - ": [
+    "p",
+    1734
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - pwbatchtest@open.com": [
+    "p",
+    1378
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - wrong@open.com": [
+    "p",
+    1286
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - invalid@open.com": [
+    "p",
+    1435
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - pwbatchtest@open.com": [
+    "p",
+    1471
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    902
+   ]
+  }
+ },
+ {
+  "time": 1791336182244,
+  "duration": 10621.422999999999,
+  "passed": 11,
+  "failed": 2,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 13,
+  "tests": {
+   "chromium::tests/loginpagefix.spec.ts::@smoke footers exist on product page": [
+    "p",
+    1848
+   ],
+   "chromium::tests/productpage.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    3252
+   ],
+   "chromium::tests/productpage.spec.ts::@smoke footers exist on product page": [
+    "p",
+    2706
+   ],
+   "chromium::tests/productpage.spec.ts::@regression verify product images count": [
+    "p",
+    4471
+   ],
+   "chromium::tests/productpage.spec.ts::@regression verify product Information/Data": [
+    "p",
+    2955
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Pro": [
+    "p",
+    2558
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Air": [
+    "p",
+    2393
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - imac - iMac": [
+    "p",
+    2059
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Pro": [
+    "p",
+    2333
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Air": [
+    "p",
+    2619
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - imac - iMac": [
+    "p",
+    2695
+   ],
+   "chromium::tests/search.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    1857
+   ],
+   "chromium::tests/search.spec.ts::@smoke footers exist on product page": [
+    "p",
+    2053
+   ]
+  }
+ },
+ {
+  "time": 1791336402212,
+  "duration": 15711.822,
+  "passed": 14,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 14,
+  "tests": {
+   "chromium::tests/api/booking.api.spec.ts::booking CRUD with token": [
+    "p",
+    1638
+   ],
+   "chromium::tests/api/intercept.spec.ts::@smoke intercept and log requests": [
+    "p",
+    3172
+   ],
+   "chromium::tests/api/intercept.spec.ts::@regression mock search data api": [
+    "p",
+    13816
+   ],
+   "chromium::tests/api/intercept.spec.ts::mock search page with fake HTML": [
+    "p",
+    13132
+   ],
+   "chromium::tests/api/spotify.oauth2.spec.ts::@regression GET -- get albums data": [
+    "p",
+    975
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression POST - create a user": [
+    "p",
+    1605
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression PUT - update a user": [
+    "p",
+    1475
+   ],
+   "chromium::tests/api/users.api.indi.spec.ts::@regression DELETE - delete a user": [
+    "p",
+    1124
+   ],
+   "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get a user": [
+    "p",
+    790
+   ],
+   "chromium::tests/api/users.api.schema.spec.ts::@smoke GET -- get all users": [
+    "p",
+    405
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression GET API -- get all users": [
+    "p",
+    393
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression POST API -- create a user": [
+    "p",
+    383
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression PUT API -- Update a user": [
+    "p",
+    396
+   ],
+   "chromium::tests/api/users.api.sep.spec.ts::running e2e go rest crud api tests › @regression DELETE API -- Delete a user": [
+    "p",
+    402
+   ]
+  }
+ },
+ {
+  "time": 1791336420207,
+  "duration": 5458.1630000000005,
+  "passed": 5,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 8,
+  "total": 13,
+  "tests": {
+   "chromium::tests/api/users.api.spec.ts::get user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::create a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::Update a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/api/users.api.spec.ts::Delete a user test": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepage.spec.ts::logout link exist test": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepage.spec.ts::home page headers exist test @junesprint": [
+    "s",
+    0
+   ],
+   "chromium::tests/homepagefix.spec.ts::@smoke home page title test": [
+    "p",
+    3127
+   ],
+   "chromium::tests/homepagefix.spec.ts::@smoke logout link exist test": [
+    "p",
+    3337
+   ],
+   "chromium::tests/homepagefix.spec.ts::@regression home page headers exist test": [
+    "p",
+    3161
+   ],
+   "chromium::tests/loginpage.spec.ts::login page title test": [
+    "p",
+    2463
+   ],
+   "chromium::tests/loginpage.spec.ts::forgot pwd link exist test": [
+    "s",
+    0
+   ],
+   "chromium::tests/loginpage.spec.ts::user is able to login to app test": [
+    "s",
+    0
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke login page title test": [
+    "p",
+    1088
+   ]
+  }
+ },
+ {
+  "time": 1791336427365,
+  "duration": 10651.606,
+  "passed": 11,
+  "failed": 2,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 13,
+  "tests": {
+   "chromium::tests/loginpagefix.spec.ts::@regression forgot pwd link exist test": [
+    "f",
+    2793
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke user is able to login to app test": [
+    "p",
+    3898
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression login to app using wrong credentials with Data driven test": [
+    "p",
+    4247
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - invalid@open.com - wrong123": [
+    "p",
+    3197
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with -  - pw1234": [
+    "p",
+    2441
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with - pwtestbatch@open.com - ": [
+    "p",
+    2883
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - abccc@gmail.com": [
+    "p",
+    2362
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - ": [
+    "p",
+    2199
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@regression invalid login test with excel data - pwbatchtest@open.com": [
+    "p",
+    1454
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - wrong@open.com": [
+    "p",
+    1532
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - invalid@open.com": [
+    "p",
+    1469
+   ],
+   "chromium::tests/loginpagefix.spec.ts::invalid login test with JSON data - pwbatchtest@open.com": [
+    "p",
+    1444
+   ],
+   "chromium::tests/loginpagefix.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    1093
+   ]
+  }
+ },
+ {
+  "time": 1791336440097,
+  "duration": 11459.663,
+  "passed": 11,
+  "failed": 2,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 13,
+  "tests": {
+   "chromium::tests/loginpagefix.spec.ts::@smoke footers exist on product page": [
+    "p",
+    1740
+   ],
+   "chromium::tests/productpage.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    2477
+   ],
+   "chromium::tests/productpage.spec.ts::@smoke footers exist on product page": [
+    "p",
+    2719
+   ],
+   "chromium::tests/productpage.spec.ts::@regression verify product images count": [
+    "p",
+    3849
+   ],
+   "chromium::tests/productpage.spec.ts::@regression verify product Information/Data": [
+    "p",
+    2932
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Pro": [
+    "p",
+    2571
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - macbook - MacBook Air": [
+    "p",
+    3032
+   ],
+   "chromium::tests/search.spec.ts::@regression verify search results count - imac - iMac": [
+    "p",
+    2564
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Pro": [
+    "p",
+    2858
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - macbook - MacBook Air": [
+    "p",
+    2897
+   ],
+   "chromium::tests/search.spec.ts::@regression verify user is able to land on the product page - imac - iMac": [
+    "p",
+    3062
+   ],
+   "chromium::tests/search.spec.ts::@smoke comp logo exists on product page": [
+    "f",
+    1797
+   ],
+   "chromium::tests/search.spec.ts::@smoke footers exist on product page": [
+    "p",
+    1989
    ]
   }
  }

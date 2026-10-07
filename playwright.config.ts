@@ -25,14 +25,14 @@ export default defineConfig({
       ["blob"],
       ["html", { outputFolder: "reports/html-report", open: "never" }],
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
-      ['reporting-labs', reportingLabs]
+      ["reporting-labs", { open: "never" }]
     ]
     : [
       ["blob", { outputDir: "blob-report" }],
       ["list"],
       ["html", { outputFolder: "reports/html-report", open: "never" }],
       ["allure-playwright", { outputFolder: "allure-results", suiteTitle: true }],
-      ['reporting-labs', reportingLabs]
+      ["reporting-labs", { open: "never" }]
     ],
 
   use: {

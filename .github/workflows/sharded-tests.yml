@@ -18,7 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        # as many jobs as the shards you picked (2 → [1, 2], 4 → [1, 2, 3, 4])
+        shard: ${{ fromJSON(inputs.shards == '2' && '[1, 2]' || '[1, 2, 3, 4]') }}
     runs-on: ubuntu-latest
     environment: QA
 
@@ -44,6 +45,7 @@ jobs:
         run: npx playwright test --project=chromium --shard=${{ matrix.shard }}/${{ inputs.shards }}
         env:
           ENV: qa
+          TEST_ENV: qa                     # the "env" chip in the reportingLabs header (reporting-labs.config.ts)
           BASE_URL: ${{ secrets.BASE_URL }}
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -79,6 +81,15 @@ jobs:
           name: blob-report-shard-${{ matrix.shard }}
           path: blob-report/
           retention-days: 1
+
+      # Per-shard reportingLabs report (index.html + report.pdf + report.json — the JSON is what the merge reads)
+      - name: Upload shard reportingLabs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporting-labs-shard-${{ matrix.shard }}
+          path: reporting-labs/
+          retention-days: 7
 
   merge-reports:
     name: Merge All Reports
@@ -145,4 +156,26 @@ jobs:
         with:
           name: merged-allure-report
           path: merged-allure-report/
+          retention-days: 30
+
+      # ─── MERGE REPORTINGLABS REPORT ────────────────────
+      # if: always() so this still runs when an Allure step above fails
+      - name: Download all reportingLabs reports
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reporting-labs           # one subfolder per shard: all-reporting-labs/reporting-labs-shard-1/ ...
+          pattern: reporting-labs-shard-*
+
+      - name: Merge reportingLabs report
+        if: always()
+        # @latest: one Timeline row per worker of every shard (0.6.14+), whatever version package-lock.json has
+        run: npx --yes reporting-labs@latest merge ./all-reporting-labs -o merged-reporting-labs
+
+      - name: Upload merged reportingLabs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-reporting-labs-report
+          path: merged-reporting-labs/
           retention-days: 30

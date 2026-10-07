@@ -14,7 +14,7 @@ export class BasePage {
 
     constructor(page: Page) {
         this.page = page;
-        this.logo = page.getByAltText('naveenopencart');
+        this.logo = page.getByAltText('naveenopencart123');
         this.searchBox = page.getByPlaceholder('Search');
         this.searchIcon = page.locator('div#search button');
         this.currency = page.locator('#form-currency');
