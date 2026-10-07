@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       shards:
-        description: 'Number of shards'
+        description: 'Number of shardss'
         required: true
         default: '4'
         type: choice
@@ -179,3 +179,98 @@ jobs:
           name: merged-reporting-labs-report
           path: merged-reporting-labs/
           retention-days: 30
+
+  publish-reports:
+    name: Publish Reports to GitHub Pages
+    needs: merge-reports
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write                      # push to the gh-pages branch
+    concurrency:
+      group: gh-pages                      # one push to gh-pages at a time (e2e.yml publishes there too)
+      cancel-in-progress: false
+    env:
+      RUN_DIR: pages-deploy/runs/${{ github.run_id }}
+      REPORT_URL: https://naveenanimation20.github.io/OpenCartWebAPIFramework/runs/${{ github.run_id }}
+    steps:
+      - name: Download merged reports
+        uses: actions/download-artifact@v4
+        with:
+          path: merged-reports             # merged-reports/merged-pw-html-report/, merged-allure-report/, merged-reporting-labs-report/
+          pattern: merged-*
+
+      - name: Organize reports
+        run: |
+          mkdir -p "$RUN_DIR"
+          # || true: a report whose merge failed is simply left out
+          cp -r merged-reports/merged-pw-html-report/        "$RUN_DIR/html/"  2>/dev/null || true
+          cp -r merged-reports/merged-allure-report/         "$RUN_DIR/allure/" 2>/dev/null || true
+          cp -r merged-reports/merged-reporting-labs-report/ "$RUN_DIR/rlabs/"  2>/dev/null || true
+
+          # Result line for the landing page, from the merged reportingLabs report.json
+          SUMMARY="No reportingLabs result"
+          if [ -f "$RUN_DIR/rlabs/report.json" ]; then
+            SUMMARY=$(jq -r '[.tests[].outcome] as $o
+              | "\($o | length) tests · \([$o[] | select(. == "passed")] | length) passed · \([$o[] | select(. == "failed")] | length) failed · \([$o[] | select(. == "flaky")] | length) flaky · \([$o[] | select(. == "skipped")] | length) skipped"' \
+              "$RUN_DIR/rlabs/report.json")
+          fi
+
+          cat > "$RUN_DIR/index.html" <<INDEXPAGE
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Sharded run ${{ github.run_id }}</title>
+            <style>
+              body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 32px 16px; background: #f5f6f8; color: #1d2433; }
+              .container { max-width: 720px; margin: 0 auto; }
+              h1 { font-size: 24px; margin: 0 0 6px; }
+              .meta { color: #5b6475; font-size: 14px; margin: 0 0 24px; }
+              .card { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+              .result { font-size: 15px; margin: 0 0 16px; }
+              .links { display: flex; flex-wrap: wrap; gap: 10px; }
+              .btn { display: inline-block; padding: 10px 18px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; }
+              .rlabs { background: #1d4ed8; } .html { background: #2d7d46; } .allure { background: #c2410c; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Sharded Playwright run</h1>
+              <p class="meta">Run ID: ${{ github.run_id }} · ${{ inputs.shards }} shards · Branch: ${{ github.ref_name }} · $(date +'%d %b %Y, %I:%M %p UTC')</p>
+              <div class="card">
+                <p class="result">${SUMMARY}</p>
+                <div class="links">
+                  <a class="btn rlabs" href="rlabs/index.html">reportingLabs</a>
+                  <a class="btn html" href="html/index.html">Playwright HTML</a>
+                  <a class="btn allure" href="allure/index.html">Allure</a>
+                </div>
+              </div>
+            </div>
+          </body>
+          </html>
+          INDEXPAGE
+
+          echo "Reports organized:"
+          ls -la "$RUN_DIR"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: pages-deploy
+          keep_files: true                 # keep the earlier runs (and the e2e.yml runs) on gh-pages
+
+      - name: Report links in the run summary
+        run: |
+          {
+            echo "### Test reports"
+            echo ""
+            echo "- [All reports for this run](${REPORT_URL}/index.html)"
+            echo "- [reportingLabs](${REPORT_URL}/rlabs/index.html)"
+            echo "- [Playwright HTML](${REPORT_URL}/html/index.html)"
+            echo "- [Allure](${REPORT_URL}/allure/index.html)"
+            echo ""
+            echo "_GitHub Pages takes a minute or two to update after the deploy._"
+          } >> "$GITHUB_STEP_SUMMARY"
