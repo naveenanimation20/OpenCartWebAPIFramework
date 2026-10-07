@@ -1,0 +1,3 @@
+user creds: pwbatchtest@open.com - pw123
+search key: macbook
+total images:  4
