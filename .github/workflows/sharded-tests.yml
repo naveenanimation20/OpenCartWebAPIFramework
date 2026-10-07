@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       shards:
-        description: 'Number of shardss'
+        description: 'Number of shards'
         required: true
         default: '4'
         type: choice
